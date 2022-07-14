@@ -25,12 +25,12 @@ final int minSize = 1;
 
 // Colors
 final int colorStep = 2;
-final int maxColor = 256;
 final int opacity = 150;
-final int minR = 50;
-final int minG = 100;
-final int minB = 200;
+final int minR = 25;
+final int minG = 75;
+final int minB = 175;
 
+// TODO: document that the creates a gradient using a spread of nice colors
 int r = minR;
 int g = minG;
 int b = minB;
@@ -42,6 +42,7 @@ int numTriangles = 0;
 int angle = 325;
 int side = windowDim.width;
 
+// Lets us wait for the user to click before running
 boolean running;
 
 //----------------------------------------------------------- WINDOW SETUP --//
@@ -51,29 +52,35 @@ void settings() {
 }
 
 void setup() {
-  frameRate(45);
+  // TODO: change this back to 45;
+  frameRate(120);
   background(255);
-  stroke(r, g, b, opacity);
   noFill();
 }
 
 void draw() {
-  if (running) {
-    if (++numTriangles < maxTriangles && side > minSize) {
-      drawRotatedTriangle(center, side, angle);
-      
-      // Rotate the triangle
-      angle += rotation;
-      angle %= maxDegrees;
-      // Make it slightly smaller
-      side -= sideDecrease;
-      
-      // Change color
-      cycleColor();
-      // Set new color
-      stroke(r, g, b);
-    }
+  // Don't do anything if the user hasn't clicked yet
+  if (!running) {
+    return;
   }
+
+  if (abs(side) <= windowDim.width) {
+    stroke(r, g, b, opacity);
+    drawRotatedTriangle(center, side, angle);
+
+    // Rotate the triangle
+    angle += rotation;
+    angle %= maxDegrees;
+    // Make it slightly smaller
+    side -= sideDecrease;
+
+    // Change color
+    cycleColor();
+  } else {
+    background(255);
+    side = windowDim.width;
+  }
+  println("side: " + side);
 }
 
 void mouseClicked() {
@@ -83,6 +90,7 @@ void mouseClicked() {
 void drawRotatedTriangle(Point origin, int side, int thetaDegrees) {
   // Store current transform
   pushMatrix();
+  
   // Move to origin and rotate
   translate(origin.x, origin.y);
   rotate(radians(thetaDegrees));
@@ -91,14 +99,14 @@ void drawRotatedTriangle(Point origin, int side, int thetaDegrees) {
                0, -side,
             side,  side);
 
-  // Undo transforms
+  // Restore previous transform
   popMatrix();
 }
 
 void cycleColor() {
   if (rAscending) {
     r += colorStep;
-    rAscending = r < maxColor;
+    rAscending = r < 256;
   } else {
     r -= colorStep;
     rAscending = r <= minR;
@@ -106,7 +114,7 @@ void cycleColor() {
   
   if (gAscending) {
     g += colorStep;
-    gAscending = g < maxColor;
+    gAscending = g < 256;
   } else {
     g -= colorStep;
     gAscending = g <= minG;
@@ -114,7 +122,7 @@ void cycleColor() {
 
   if (bAscending) {
     b += colorStep;
-    bAscending = b < maxColor;
+    bAscending = b < 256;
   } else {
     b -= colorStep;
     bAscending = b <= minB;
