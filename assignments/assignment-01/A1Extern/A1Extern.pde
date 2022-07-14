@@ -59,18 +59,20 @@ void setup() {
 
 void draw() {
   if (running) {
-    drawRotatedTriangle(center, side, angle);
+    if (++numTriangles < maxTriangles && side > minSize) {
+      drawRotatedTriangle(center, side, angle);
       
-    // Rotate the triangle
-    angle += rotation;
-    angle %= maxDegrees;
-    // Make it slightly smaller
-    side -= sideDecrease;
+      // Rotate the triangle
+      angle += rotation;
+      angle %= maxDegrees;
+      // Make it slightly smaller
+      side -= sideDecrease;
       
-    // Change color
-    cycleColor();
-    // Set new color
-    stroke(r, g, b);
+      // Change color
+      cycleColor();
+      // Set new color
+      stroke(r, g, b);
+    }
   }
 }
 
