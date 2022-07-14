@@ -10,11 +10,11 @@ import java.awt.Point;
 
 //----------------------------------------------------------- FRACTAL VARS --//
 
-// Constants
+// Window Constants
 final Dimension windowDim = new Dimension(750, 750);
 final Point center = new Point((int)(windowDim.width * 0.5), (int)(windowDim.height * 0.5));
 
-// Rotation
+// Rotation Constants
 final int maxDegrees = 360;
 final int rotation = 2;
 
@@ -23,7 +23,7 @@ final int maxTriangles = 500;
 final int sideDecrease = 2;
 final int minSize = 1;
 
-// Colors
+// Colors Constants
 final int colorStep = 2;
 final int opacity = 150;
 final int minR = 25;
@@ -80,7 +80,6 @@ void draw() {
     background(255);
     side = windowDim.width;
   }
-  println("side: " + side);
 }
 
 void mouseClicked() {
