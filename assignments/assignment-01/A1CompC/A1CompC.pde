@@ -2,49 +2,44 @@
 /// Tessa Power (300633153)
 /// A1CompC
 
-//------------------------------------------------------------- COLOR VARS --//
-int r = 0;
-int g = 0;
-int b = 0;
+import java.awt.Dimension;
 
-int redR = 250;
-int redG = 50;
-int redB = 0;
+//----------------------------------------------------------------- COLORS --//
 
-int blueR = 0;
-int blueG = 100;
-int blueB = 230;
+// Constants
+final color COLOR_PRESSED = color(250, 50, 0);       // A more pleasing red
+final color COLOR_RELEASED = color(0, 100, 230);     // A nice blue
+final color COLOR_BACKGROUND = color(127, 127, 127); // A boring old grey
 
 //----------------------------------------------------------- WINDOW SETUP --//
 
+final Dimension WINDOW_DIMENSION = new Dimension(750, 750);
+final int FRAMERATE = 60;
+
+void settings() {
+  size(WINDOW_DIMENSION.width, WINDOW_DIMENSION.height);
+}
+
 void setup() {
-  size(400, 300);
-  frameRate(60);
-  setColor(blueR, blueG, blueB);
+  frameRate(FRAMERATE);
+  fill(COLOR_RELEASED);
 }
 
 //------------------------------------------------------------------- DRAW --//
 
+final int SIZE = 80;
+
 void draw() {
-  background(0);
-  fill(r, g, b);
-  ellipse(mouseX, mouseY, 40, 40);
+  background(COLOR_BACKGROUND);
+  ellipse(mouseX, mouseY, SIZE, SIZE);
 }
 
 //----------------------------------------------------------- MOUSE EVENTS --//
 
 void mousePressed() {
-  setColor(250, 50, 0);
+  fill(COLOR_PRESSED);
 }
 
 void mouseReleased() {
-  setColor(0, 100, 230);
-}
-
-//---------------------------------------------------------------- HELPERS --//
-
-void setColor(int red, int green, int blue) {
-  r = red;
-  g = green;
-  b = blue;
+  fill(COLOR_RELEASED);
 }

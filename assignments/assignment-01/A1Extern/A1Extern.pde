@@ -30,17 +30,20 @@ final int minR = 25;
 final int minG = 75;
 final int minB = 175;
 
-// TODO: document that the creates a gradient using a spread of nice colors
+// We change the colors slightly each time a triangle is drawn, and clamp the
+// range of the RGB values. The resulting colors form a gradient that will move
+// back and forth in a range of aesthetically pleasing colors from min_ to 256.
 int r = minR;
 int g = minG;
 int b = minB;
+// Set whether colors first change in ascending or descending order
 boolean rAscending = true;
 boolean gAscending = true;
 boolean bAscending = true;
 
-int numTriangles = 0;
+// The initial values for the length of a triangle side and its rotation.
 int angle = 325;
-int side = windowDim.width;
+int barycenter = windowDim.width;
 
 // Lets us wait for the user to click before running
 boolean running;
@@ -52,41 +55,49 @@ void settings() {
 }
 
 void setup() {
-  // TODO: change this back to 45;
-  frameRate(120);
+  frameRate(60);
   background(255);
-  noFill();
 }
 
 void draw() {
   // Don't do anything if the user hasn't clicked yet
   if (!running) {
+    textSize(32);
+    fill(minR, minG, minB);
+    text("click me", 100, 100);
     return;
   }
 
-  if (abs(side) <= windowDim.width) {
+  if (abs(barycenter) <= windowDim.width) {
     stroke(r, g, b, opacity);
-    drawRotatedTriangle(center, side, angle);
+    drawRotatedTriangle(center, barycenter, angle);
 
     // Rotate the triangle
     angle += rotation;
     angle %= maxDegrees;
     // Make it slightly smaller
-    side -= sideDecrease;
+    barycenter -= sideDecrease;
 
     // Change color
     cycleColor();
   } else {
     background(255);
-    side = windowDim.width;
+    barycenter = windowDim.width;
   }
 }
 
 void mouseClicked() {
   running = true;
+  background(255);
+  noFill();
 }
 
-void drawRotatedTriangle(Point origin, int side, int thetaDegrees) {
+/**
+ * Draw an equaliteral triangle, centered at the given <code>origin</code>
+ * and rotated <code>thetaDegrees</code>. The <code>barycenter</code>
+ * specifies the distance of each vertex from the center of the triangle.
+ */
+void drawRotatedTriangle(Point origin, int barycenter, int thetaDegrees) {
   // Store current transform
   pushMatrix();
   
@@ -94,14 +105,19 @@ void drawRotatedTriangle(Point origin, int side, int thetaDegrees) {
   translate(origin.x, origin.y);
   rotate(radians(thetaDegrees));
   
-  triangle(-side,  side,
-               0, -side,
-            side,  side);
+  triangle(-barycenter,  barycenter,
+                     0, -barycenter,
+            barycenter,  barycenter);
 
   // Restore previous transform
   popMatrix();
 }
 
+/**
+ * Cycle the RGB color values within their respective ranges, from min_ to 255.
+ * When each color reaches the maximum possible, the color values will move
+ * downwards toward their set minimum value, and vice versa.
+ */
 void cycleColor() {
   if (rAscending) {
     r += colorStep;

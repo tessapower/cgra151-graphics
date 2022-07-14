@@ -3,29 +3,34 @@
 /// A1CompA
 
 //----------------------------------------------------------- WINDOW SETUP --//
+
 size(750, 750);
 strokeWeight(1.5);
 background(127, 127, 127);
 
+//------------------------------------------------------------- CONSTANTS --//
+
+final int NUM_ROWS = 25;
+final int RECT_HEIGHT = height / NUM_ROWS;
+final int RECT_MIN_WIDTH = 1;
+final int RECT_MAX_WIDTH = 35;
+final int SPACER = 5;
+
 //------------------------------------------------------------- VARIABLES --//
-var numRows = 25;
-var rectHeight = height / numRows;
-var rectMinWidth = 1;
-var rectMaxWidth = 35;
-var spacer = 5;
+
 var x = 0;
 var y = 0;
 
-for (var row = 0; row < numRows; ++row) {
+for (var row = 0; row < NUM_ROWS; ++row) {
   while (x < width) {
     // Set the width of the rect randomly
-    var rectWidth = random(rectMinWidth, rectMaxWidth);
-    rect(x, y, rectWidth, rectHeight);
+    var rectWidth = random(RECT_MIN_WIDTH, RECT_MAX_WIDTH);
+    rect(x, y, rectWidth, RECT_HEIGHT);
     // Move along the row
-    x += rectWidth + spacer;
+    x += rectWidth + SPACER;
   }
   // Reset x to beginning of row
   x = 0;
   // Move to next row
-  y += rectHeight;
+  y += RECT_HEIGHT;
 }
