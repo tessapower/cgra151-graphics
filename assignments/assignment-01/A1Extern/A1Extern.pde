@@ -42,6 +42,8 @@ int numTriangles = 0;
 int angle = 325;
 int side = windowDim.width;
 
+boolean running;
+
 //----------------------------------------------------------- WINDOW SETUP --//
 
 void settings() {
@@ -56,20 +58,26 @@ void setup() {
 }
 
 void draw() {
-  if (++numTriangles < maxTriangles && side > minSize) {
-    drawRotatedTriangle(center, side, angle);
-    
-    // Rotate the triangle
-    angle += rotation;
-    angle %= maxDegrees;
-    // Make it slightly smaller
-    side -= sideDecrease;
-    
-    // Change color
-    cycleColor();
-    // Set new color
-    stroke(r, g, b);
+  if (running) {
+    if (++numTriangles < maxTriangles && side > minSize) {
+      drawRotatedTriangle(center, side, angle);
+      
+      // Rotate the triangle
+      angle += rotation;
+      angle %= maxDegrees;
+      // Make it slightly smaller
+      side -= sideDecrease;
+      
+      // Change color
+      cycleColor();
+      // Set new color
+      stroke(r, g, b);
+    }
   }
+}
+
+void mouseClicked() {
+  running = true;
 }
 
 void drawRotatedTriangle(Point origin, int side, int thetaDegrees) {
