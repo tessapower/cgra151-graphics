@@ -12,7 +12,7 @@ import java.awt.Point;
 
 // Window Constants
 final Dimension windowDim = new Dimension(750, 750);
-final Point center = new Point((int)(windowDim.width * 0.5), (int)(windowDim.height * 0.5));
+final Point center = new Point(int(windowDim.width * 0.5), int(windowDim.height * 0.5));
 
 // Rotation Constants
 final int maxDegrees = 360;
@@ -100,11 +100,11 @@ void mouseClicked() {
 void drawRotatedTriangle(Point origin, int barycenter, int thetaDegrees) {
   // Store current transform
   pushMatrix();
-  
+
   // Move to origin and rotate
   translate(origin.x, origin.y);
   rotate(radians(thetaDegrees));
-  
+
   triangle(-barycenter,  barycenter,
                      0, -barycenter,
             barycenter,  barycenter);
@@ -126,7 +126,7 @@ void cycleColor() {
     r -= colorStep;
     rAscending = r <= minR;
   }
-  
+
   if (gAscending) {
     g += colorStep;
     gAscending = g < 256;
