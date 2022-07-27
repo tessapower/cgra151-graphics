@@ -4,14 +4,14 @@
 
 import java.awt.Dimension;
 
-//----------------------------------------------------------------- COLORS --//
+//------------------------------------------------------------------ COLORS --//
 
 // Constants
 final color COLOR_PRESSED = color(250, 50, 0);       // A more pleasing red
 final color COLOR_RELEASED = color(0, 100, 230);     // A nice blue
 final color COLOR_BACKGROUND = color(127, 127, 127); // A boring old grey
 
-//----------------------------------------------------------- WINDOW SETUP --//
+//------------------------------------------------------------ WINDOW SETUP --//
 
 final Dimension WINDOW_DIMENSION = new Dimension(750, 750);
 final int FRAMERATE = 60;
@@ -25,7 +25,7 @@ void setup() {
   fill(COLOR_RELEASED);
 }
 
-//------------------------------------------------------------------- DRAW --//
+//-------------------------------------------------------------------- DRAW --//
 
 final int SIZE = 80;
 
@@ -34,7 +34,7 @@ void draw() {
   ellipse(mouseX, mouseY, SIZE, SIZE);
 }
 
-//----------------------------------------------------------- MOUSE EVENTS --//
+//------------------------------------------------------------ MOUSE EVENTS --//
 
 void mousePressed() {
   fill(COLOR_PRESSED);
