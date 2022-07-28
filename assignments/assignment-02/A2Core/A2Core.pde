@@ -27,7 +27,6 @@ void setup() {
     ball.setVx(4);
     ball.setVy(3);
 
-    rectMode(CENTER);
     bat = new Bat(new Point(width / 2, height - (height / 5)));
 }
 
@@ -37,7 +36,7 @@ void draw() {
     // Update the ball's position
     ball.update();
 
-    // Check for and resolve collisions
+    // Handle collisions
     handleCollisions();
 
     ball.draw();
@@ -47,23 +46,22 @@ void draw() {
 //------------------------------------------------------------ MOUSE EVENTS --//
 
 void mouseMoved() {
-    // Offsets used to keep the bat within the window
-    var batHorizontalOffset = bat.width() / 2;
-    var batVerticalOffset = bat.height() / 2;
-
-    // Ensure the bat's new x, y coordinates are within the window
-    var newX = mouseX;
-    if (mouseX >= width - batHorizontalOffset) {
-        newX = width - batHorizontalOffset;
-    } else if (mouseX <= batHorizontalOffset) {
-        newX = batHorizontalOffset;
+    var newX = mouseX - bat.width() / 2;
+    // Clamp new x pos within horizontal window bounds
+    var maxX = width - bat.width();
+    if (mouseX <= 0) {
+        newX = 0;
+    } else if (mouseX >= maxX) {
+        newX = maxX;
     }
 
-    var newY = mouseY;
-    if (mouseY >= width - batVerticalOffset) {
-        newY = height - batVerticalOffset;
-    } else if (mouseY <= batVerticalOffset) {
-        newY = batVerticalOffset;
+    var newY = mouseY - bat.height() / 2;
+    // Clamp new y pos within vertical window bounds
+    var maxY = height - bat.height();
+    if (mouseY <= 0) {
+        newY = 0;
+    } else if (mouseY >= maxY) {
+        newY = maxY;
     }
 
     bat.setOrigin(new Point(newX, newY));
@@ -77,90 +75,49 @@ void mouseMoved() {
  */
 void handleCollisions() {
     // Used to determine position of ball in window compared to walls and bat
-    var origin = ball.origin();
-    var ballX = origin.x;
-    var ballY = origin.y;
+    var ballOrigin = ball.origin();
     var ballRadius = ball.radius();
+    var ballTop    = new Point(ballOrigin.x,              ballOrigin.y - ballRadius);
+    var ballBottom = new Point(ballOrigin.x,              ballOrigin.y + ballRadius);
+    var ballLeft   = new Point(ballOrigin.x - ballRadius, ballOrigin.y);
+    var ballRight  = new Point(ballOrigin.x + ballRadius, ballOrigin.y);
 
-    // Check if the ball has hit the walls
+    // BALL VS. WALLS
     // North or South Walls
-    if (ballY - ballRadius < 0 || ballY + ballRadius > height) {
+    if (ballTop.y <= 0 || ballBottom.y >= height) {
         ball.setVy(ball.vy() * -1);
     }
 
     // East or West Walls
-    if (ballX - ballRadius < 0 || ballX + ballRadius > width) {
+    if (ballLeft.x <= 0 || ballRight.x >= width) {
         ball.setVx(ball.vx() * -1);
     }
 
-    // Check if ball has hit bat and if so handle collision
-    if (didBallBatCollide(ball, bat)) {
-        println("Handle collision");
-        // handleBallBatCollision(ball, bat);
-    }
-}
-
-enum BatSide {
-    LEFT, RIGHT, TOP, BOTTOM
-}
-
-boolean didBallBatCollide(Ball ball, Bat bat) {
-    // Ball testing point
-    Point ballCenter = ball.origin();
-
-    // Bat testing points
-    Point batCenter = bat.origin();
-    var batXSize = bat.width() / 2;
-    var batLeft = batCenter.x - batXSize;
-    var batRight = batCenter.x + batXSize;
-    var batYSize = bat.height() / 2;
-    var batTop = batCenter.y - batYSize;
-    var batBottom = batCenter.y + batYSize;
-
-    // Temp values for testing edges
-    var distX = ballCenter.x;
-    var distY = ballCenter.y;
-
-    // Find horizontal side of bat closest to ball center
-    if (ballCenter.x <= batLeft) {
-        distX = ballCenter.x - batLeft;
-    } else if (ballCenter.x >= batRight) {
-        distX = ballCenter.x - batRight;
+    // BALL VS. BAT
+    // 4x test points on ball top, bottom, left, right
+    // if bat contains any of them, reflect in x or y
+    if (bat.contains(ballTop) || bat.contains(ballBottom)) {
+        // reflect
+        // move by 2x overlap amount
+        println("reflect y");
+    } else if (bat.contains(ballLeft) || bat.contains(ballRight)) {
+        // reflect
+        // move by 2x overlap amount
+        println("reflect x");
     }
 
-    if (ballCenter.y <= batTop) {
-        distY = ballCenter.y - batTop;
-    } else if (ballCenter.y >= batBottom) {
-        distY = ballCenter.y - batBottom;
+    // 4x test points on bat corners
+    // if ball contains any of them, reflect x, y
+    var batTopLeft     = bat.origin();
+    var batTopRight    = new Point(batTopLeft.x + bat.width(), batTopLeft.y);
+    var batBottomLeft  = new Point(batTopLeft.x,               batTopLeft.y + bat.height());
+    var batBottomRight = new Point(batTopRight.x,              batBottomLeft.y);
+    if (ball.contains(batTopLeft) || ball.contains(batTopRight)
+            || ball.contains(batBottomLeft) || ball.contains(batBottomRight)) {
+        // reflect in x and y
+        // move by 2x overlap amount
+        println("reflect x and y");
     }
-
-    // Calc if the distance to the closest edges is less than the radius.
-    // If true, the ball is overlapping the bat.
-    return sqrt((distX * distX) + (distY * distY)) <= ball.radius();
-}
-
-boolean circleRect(float cx, float cy, float radius, float rx, float ry, float rw, float rh) {
-
-  // temporary variables to set edges for testing
-  float testX = cx;
-  float testY = cy;
-
-  // which edge is closest?
-  if (cx < rx)         testX = rx;      // test left edge
-  else if (cx > rx+rw) testX = rx+rw;   // right edge
-  if (cy < ry)         testY = ry;      // top edge
-  else if (cy > ry+rh) testY = ry+rh;   // bottom edge
-
-  // get distance from closest edges
-  float distX = cx-testX;
-  float distY = cy-testY;
-  float distance = sqrt( (distX*distX) + (distY*distY) );
-
-  // if the distance is less than the radius, collision!
-  if (distance <= radius) {
-    return true;
-  }
-  return false;
 }
 
 //-------------------------------------------------------------- BALL & BAT --//
@@ -216,6 +173,14 @@ class Ball {
     public void update() {
         origin.translate(vx, vy);
     }
+
+    public boolean contains(Point p) {
+        // Check if distance between point and origin is less than radius,
+        // if yes then the ball contains the point
+        var distX = p.x - origin.x;
+        var distY = p.y - origin.y;
+        return sqrt((distX * distX) + (distY * distY)) <= RADIUS;
+    }
 }
 
 class Bat {
@@ -252,5 +217,9 @@ class Bat {
     public int height() {
         return DIMENSION.height;
     }
-}
 
+    public boolean contains(Point p) {
+        return p.x >= origin.x && p.x <= origin.x + DIMENSION.width
+            && p.y >= origin.y && p.y <= origin.y + DIMENSION.height;
+    }
+}
