@@ -24,10 +24,6 @@ public class Ball {
         origin.y += dy;
     }
 
-    public void setOrigin(Point origin) {
-        this.origin = origin;
-    }
-
     public void draw() {
         fill(COLOR);
 
