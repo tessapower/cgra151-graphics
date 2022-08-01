@@ -43,7 +43,11 @@ void draw() {
 //-------------------------------------------------------------- MOUSE EVENTS --//
 
 void mouseMoved() {
-    var newX = mouseX - bat.width() / 2;
+    clampBatPosition(new Point(mouseX, mouseY));
+}
+
+void clampBatPosition(Point mousePos) {
+    var newX = mousePos.x - bat.width() / 2;
     // Clamp new x pos within horizontal window bounds
     var maxX = width - bat.width();
     if (newX <= 0) {
@@ -52,7 +56,7 @@ void mouseMoved() {
         newX = maxX;
     }
 
-    var newY = mouseY - bat.height() / 2;
+    var newY = mousePos.y - bat.height() / 2;
     // Clamp new y pos within vertical window bounds
     var maxY = height - bat.height();
     if (newY <= 0) {
@@ -71,48 +75,47 @@ void mouseMoved() {
  * and if it has, make the ball bounce.
  */
 void handleCollisions() {
-    boolean didCollide = handleWallCollision(ball);
-    if (!didCollide) {
-        didCollide = handleBatCollision(ball, bat);
-    }
-
-    if (didCollide) {
+    var didCollide = false;
+    if ((didCollide = handleWallCollision(ball))
+        || (didCollide = handleBatCollision(ball, bat))) {
         bounce.play();
     }
 }
 
 boolean handleWallCollision(Ball ball) {
-    boolean collisionHandled = false;
+    var collisionHandled = false;
 
-    // TODO: Document this better
-    // Approach: 4x test points on ball top, bottom, left, right
-    // Detection: if bat contains any of them, reflect in x or y
-    // Resolve Collision: if bat contains any of them, reflect in x or y
-    // We assume the bounce will move the ball back as much as the ball is
-    // currently overlapping the wall
+    // Approach: Test 4x points on the circumference of the ball to see if it
+    //           has collided with any of the walls.
+    //
+    // Detection: The position of the test points on the ball are located at the
+    //            top-most, lower-most, left-most, and right-most points on the
+    //            ball. This is a simple way to see if the ball has overlapped
+    //            with the wall.
+    //
+    // Resolve Collision: If the ball has collided with the north or south wall,
+    //                    we invert the x-component of the velocity, and similarly
+    //                    if the ball has collided with the east or west wall,
+    //                    we invert the y-component of the velocity. To account
+    //                    for the ball possibly moving fast enough to go "inside"
+    //                    the wall, we rebound it back to where the ball should
+    //                    have been in that frame had it rebounded cleanly.
+    //
     var diffX = 0;
     var diffY = 0;
 
-    if (ball.top().y <= 0) {                 // Northern wall
+    if ((collisionHandled = ball.top().y <= 0)) {                 // Northern wall
         ball.reflectVy();
         diffY = -ball.top().y;
-
-        collisionHandled = true;
-    } else if (ball.bottom().y >= height) {  // Southern Wall
+    } else if ((collisionHandled = ball.bottom().y >= height)) {  // Southern Wall
         ball.reflectVy();
         diffY = height - ball.bottom().y;
-
-        collisionHandled = true;
-    } else if (ball.left().x <= 0) {        // Western Wall
+    } else if ((collisionHandled = ball.left().x <= 0)) {        // Western Wall
         ball.reflectVx();
         diffX = -ball.left().x;
-
-        collisionHandled = true;
-    } else if(ball.right().x >= width) {    // Eastern Wall
+    } else if((collisionHandled = ball.right().x >= width)) {    // Eastern Wall
         ball.reflectVx();
         diffX = width - ball.right().x;
-
-        collisionHandled = true;
     }
 
     // If we have collided with any wall, then rebound the ball to the
@@ -125,40 +128,39 @@ boolean handleWallCollision(Ball ball) {
 }
 
 boolean handleBatCollision(Ball ball, Bat bat) {
-    boolean collisionHandled = false;
+    var collisionHandled = false;
 
-    // BALL VS. BAT
-    // TODO: Document this better
-    // Approach: 4x test points on ball top, bottom, left, right
-    // Detection: if bat contains any of them, reflect in x or y
-    // Resolve Collision: if bat contains any of them, reflect in x or y
-    // We assume the bounce will move the ball back as much as the ball is
-    // currently overlapping the wall
-
+    // Approach: Test 4x points on the circumference of the ball to see if it
+    //           has collided with the bat.
+    //
+    // Detection: Same as for the walls, but this time we check if these test
+    //            points are inside the bat using overlap detection.
+    //
+    // Resolve Collision: If the ball has collided with the top or bottom of the
+    //                    bat we invert the x-component of the velocity, and
+    //                    similarly if ithas  collided with the left or right
+    //                    side of the bat, we invert the y-component of the
+    //                    velocity. To account for the ball possibly moving fast
+    //                    enough to go "inside" the bat, we rebound it back to
+    //                    where the ball should have been in that frame had it
+    //                    rebounded cleanly.
+    //
     var diffX = 0;
     var diffY = 0;
 
     // Test Ball bounding box edges
-    if (bat.contains(ball.top())) {
+    if ((collisionHandled = bat.contains(ball.top()))) {
         ball.reflectVy();
         diffY = (bat.origin().y + bat.height()) - ball.top().y;
-
-        collisionHandled = true;
-    } else if (bat.contains(ball.bottom())) {
+    } else if ((collisionHandled = bat.contains(ball.bottom()))) {
         ball.reflectVy();
         diffY = bat.origin().y - ball.bottom().y;
-
-        collisionHandled = true;
-    } else if (bat.contains(ball.left())) {
+    } else if ((collisionHandled = bat.contains(ball.left()))) {
         ball.reflectVx();
         diffX = (bat.origin().x + bat.width()) - ball.left().x;
-
-        collisionHandled = true;
-    } else if (bat.contains(ball.right())) {
+    } else if ((collisionHandled = bat.contains(ball.right()))) {
         ball.reflectVx();
         diffX = bat.origin().x - ball.right().x;
-
-        collisionHandled = true;
     }
 
     // If we have collided with any side of the bat, then rebound the ball to the

@@ -61,8 +61,8 @@ void setupGame() {
     for (var i = 0; i < numBrickRows; ++i) {
         int x = startX;
         for (var j = 0; j < numBrickCols; ++j) {
-            bricks.add(new Brick(new Point(x, y), new Dimension(brickWidth, brickHeight)));
-
+            bricks.add(new Brick(new Point(x, y),
+                       new Dimension(brickWidth, brickHeight)));
             x += brickWidth + brickSpacer;
         }
         y += brickHeight + brickSpacer;
@@ -72,38 +72,36 @@ void setupGame() {
 void draw() {
     background(#0D181C);
 
-    if (!((gameWon = bricks.isEmpty()) || gameLost)) {
-        ball.update();
-        handleCollisions();
-        ball.draw();
-        bat.draw();
-        bricks.forEach(Brick::draw);
-    } else {
-        textSize(32.0);
-        textAlign(CENTER, CENTER);
-        if (gameWon) {
-            fill(#90BE6D);
-            text("YOU WIN", 0, 0, width, height);
-        } else if (gameLost) {
-            fill(#F94144);
-            text("GAME OVER", 0, 0, width, height);
-        }
-    }
+    // Update
+    ball.update();
+    handleCollisions();
+
+    // Draw
+    ball.draw();
+    bat.draw();
+    bricks.forEach(Brick::draw);
 }
 
 //-------------------------------------------------------------- MOUSE EVENTS --//
 
 void mouseMoved() {
-    var newX = mouseX - bat.width() / 2;
+    clampBatPosition(new Point(mouseX, mouseY));
+}
+
+void clampBatPosition(Point mousePos) {
+    var newX = mousePos.x - bat.width() / 2;
     // Clamp new x pos within horizontal window bounds
     var maxX = width - bat.width();
-    if (newX <= 0) {
-        newX = 0;
-    } else if (newX >= maxX) {
-        newX = maxX;
-    }
+    if (newX <= 0) newX = 0;
+    else if (newX >= maxX) newX = maxX;
 
-    bat.setOrigin(new Point(newX, bat.origin().y));
+    var newY = mousePos.y - bat.height() / 2;
+    // Clamp new y pos within vertical window bounds
+    var maxY = height - bat.height();
+    if (newY <= 0) newY = 0;
+    else if (newY >= maxY) newY = maxY;
+
+    bat.setOrigin(new Point(newX, newY));
 }
 
 //---------------------------------------------------------------- COLLISIONS --//
@@ -113,55 +111,49 @@ void mouseMoved() {
  * and if it has, make the ball bounce.
  */
 void handleCollisions() {
-    // Wall Collisions
-    boolean didCollide = handleWallCollision();
-
-    // Bat Collision
-    if (!didCollide) {
-        didCollide = handleRectCollision(bat);
-    }
-
-    // Brick Collisions
-    if (!didCollide) {
-        didCollide = handleBrickCollisions();
-    }
-
-    if (didCollide) {
+    var didCollide = false;
+    // Play a sound on any collision
+    if ((didCollide = handleWallCollision())
+        || (didCollide = handleRectCollision(bat))
+        || (didCollide = handleBrickCollisions())) {
         bounce.play();
     }
 }
 
 boolean handleWallCollision() {
-    boolean collisionHandled = false;
+    var collisionHandled = false;
 
-    // TODO: Document this better
-    // Approach: 4x test points on ball top, bottom, left, right
-    // Detection: if bat contains any of them, reflect in x or y
-    // Resolve Collision: if bat contains any of them, reflect in x or y
-    // We assume the bounce will move the ball back as much as the ball is
-    // currently overlapping the wall
+    // Approach: Test 4x points on the circumference of the ball to see if it
+    //           has collided with any of the walls.
+    //
+    // Detection: The position of the test points on the ball are located at the
+    //            top-most, lower-most, left-most, and right-most points on the
+    //            ball. This is a simple way to see if the ball has overlapped
+    //            with the wall.
+    //
+    // Resolve Collision: If the ball has collided with the north or south wall,
+    //                    we invert the x-component of the velocity, and similarly
+    //                    if the ball has collided with the east or west wall,
+    //                    we invert the y-component of the velocity. To account
+    //                    for the ball possibly moving fast enough to go "inside"
+    //                    the wall, we rebound it back to where the ball should
+    //                    have been in that frame had it rebounded cleanly.
+    //
     var diffX = 0;
     var diffY = 0;
 
-    if (ball.top().y <= 0) {                 // Northern wall
+    if ((collisionHandled = ball.top().y <= 0)) {                 // Northern wall
         ball.reflectVy();
         diffY = -ball.top().y;
-
-        collisionHandled = true;
-    } else if (ball.bottom().y >= height) {  // Southern Wall
-        gameLost = true;
-
-        collisionHandled = true;
-    } else if (ball.left().x <= 0) {        // Western Wall
+    } else if ((collisionHandled = ball.bottom().y >= height)) {  // Southern Wall
+        ball.reflectVy();
+        diffY = height - ball.bottom().y;
+    } else if ((collisionHandled = ball.left().x <= 0)) {        // Western Wall
         ball.reflectVx();
         diffX = -ball.left().x;
-
-        collisionHandled = true;
-    } else if(ball.right().x >= width) {    // Eastern Wall
+    } else if((collisionHandled = ball.right().x >= width)) {    // Eastern Wall
         ball.reflectVx();
         diffX = width - ball.right().x;
-
-        collisionHandled = true;
     }
 
     // If we have collided with a wall, then rebound the ball to the
@@ -174,87 +166,80 @@ boolean handleWallCollision() {
 }
 
 boolean handleRectCollision(Rect r) {
-    boolean collisionHandled = false;
+    var collisionHandled = false;
 
-    // BALL VS. BAT
-    // TODO: Document this better
-    // Approach: 4x test points on ball top, bottom, left, right
-    // Detection: if bat contains any of them, reflect in x or y
-    // Resolve Collision: if bat contains any of them, reflect in x or y
-    // We assume the bounce will move the ball back as much as the ball is
-    // currently overlapping the wall
-
+    // Approach: Test 4x points on the circumference of the ball to see if it
+    //           has collided with a rect (brick or bat), and test the corners
+    //           of the rect to see if any are located inside the ball.
+    //
+    // Detection: TODO:
+    //
+    // Resolve Collision: If the ball has collided with the top or bottom of a
+    //                    rect we invert the x-component of the velocity, and
+    //                    similarly if it has collided with the left or right
+    //                    side of the rect, we invert the y-component of the
+    //                    velocity. To account for the ball possibly moving fast
+    //                    enough to go "inside" the rect, we rebound it back to
+    //                    where the ball should have been in that frame had it
+    //                    rebounded cleanly.
+    //
     var diffX = 0;
     var diffY = 0;
 
     // Test Ball bounding box edges
-    if (r.contains(ball.top())) {
+    if ((collisionHandled = r.contains(ball.top()))) {
         ball.reflectVy();
         diffY = (r.origin().y + r.height()) - ball.top().y;
-
-        collisionHandled = true;
-    } else if (r.contains(ball.bottom())) {
+    } else if ((collisionHandled = r.contains(ball.bottom()))) {
         ball.reflectVy();
         diffY = r.origin().y - ball.bottom().y;
-
-        collisionHandled = true;
-    } else if (r.contains(ball.left())) {
+    } else if ((collisionHandled = r.contains(ball.left()))) {
         ball.reflectVx();
         diffX = (r.origin().x + r.width()) - ball.left().x;
-
-        collisionHandled = true;
-    } else if (r.contains(ball.right())) {
+    } else if ((collisionHandled = r.contains(ball.right()))) {
         ball.reflectVx();
         diffX = r.origin().x - ball.right().x;
-
-        collisionHandled = true;
     }
 
-    // Test bat corners only if we haven't collided cleanly with any side of
-    // the bat
-    // TODO: Finish this
+    // Test rect corners only if we haven't collided cleanly with any side of
+    // the rect
     if (!collisionHandled) {
-        if (ball.contains(r.topLeft())) {
-            // calculate diffX
-            // calculate diffY
+        if ((collisionHandled = ball.contains(r.topLeft()))) {
+            // set x-velocity to negative of current x-velocity
+            if (ball.vx() > 0) ball.reflectVx();
 
-            collisionHandled = true;
-        } else if (ball.contains(r.topRight())) {
-            // calculate diffX
-            // calculate diffY
+            // set y-velocity to negative of current y-velocity
+            if (ball.vy() > 0) ball.reflectVy();
+        } else if ((collisionHandled = ball.contains(r.topRight()))) {
+            // set x-velocity to positive of current x-velocity
+            if (ball.vx() < 0) ball.reflectVx();
 
-            collisionHandled = true;
-        } else if (ball.contains(r.bottomLeft())) {
-            // calculate diffX
-            // calculate diffY
+            // set y-velocity to negative of current y-velocity
+            if (ball.vy() > 0) ball.reflectVy();
+        } else if ((collisionHandled = ball.contains(r.bottomLeft()))) {
+            // set x-velocity to negative of current x-velocity
+            if (ball.vx() > 0) ball.reflectVx();
 
-            collisionHandled = true;
-        } else if (ball.contains(r.bottomRight())) {
-            // calculate diffX
-            // calculate diffY
+            // set y-velocity to positive of current y-velocity
+            if (ball.vy() < 0) ball.reflectVy();
+        } else if ((collisionHandled = ball.contains(r.bottomRight()))) {
+            // set x-velocity to positive of current x-velocity
+            if (ball.vx() < 0) ball.reflectVx();
 
-            collisionHandled = true;
-        }
-
-        // If we have collided with any of the corners, then reflect the ball's
-        // velocity in both the x and y direction
-        if (collisionHandled) {
-            ball.reflectVx();
-            ball.reflectVy();
+            // set y-velocity to positive of current y-velocity
+            if (ball.vy() < 0) ball.reflectVy();
         }
     }
 
     // If we have collided with the bat at all, then rebound the ball to the
     // correct position
-    if (collisionHandled) {
-        ball.move(2 * diffX, 2 * diffY);
-    }
+    if (collisionHandled) ball.move(2 * diffX, 2 * diffY);
 
     return collisionHandled;
 }
 
 boolean handleBrickCollisions() {
-    boolean collisionHandled = false;
+    var collisionHandled = false;
 
     var it = bricks.iterator();
 
@@ -263,11 +248,7 @@ boolean handleBrickCollisions() {
 
         if ((collisionHandled = handleRectCollision(b))) {
             b.hit();
-
-            if (b.isDestroyed()) {
-                it.remove();
-            }
-
+            if (b.isDestroyed()) it.remove();
             break;
         }
     }
