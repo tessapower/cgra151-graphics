@@ -14,12 +14,11 @@ int x1 = 0;
 int y1 = 0;
 int dx = 10;
 int dy = 10;
+boolean drawCustomFirst = false;
 
 void setup() {
     size(500, 500);
     textSize(16.0);
-    // Make the lines really big so they're easy to seee
-    strokeWeight(4);
     // Make sure to turn off anti-aliasing
     noSmooth();
 }
@@ -27,20 +26,42 @@ void setup() {
 void draw() {
     background(255);
 
+    drawLabels();
+    if (drawCustomFirst) {
+        drawCustomLine();
+        drawBuiltInLine();
+    } else {
+        drawBuiltInLine();
+        drawCustomLine();
+    }
+}
+
+// -------------------------------------------------------- DRAWING HELPERS --//
+
+void drawLabels() {
     fill(CUSTOM);
     textAlign(LEFT, BOTTOM);
     text("Midpoint Line Drawing Algorithm", 0, 0, width, height);
-    stroke(CUSTOM);
-    if (abs(x0 - x1) > 0 && abs(y0 - y1) > 0) {
-        midpointLine(x0, y0, x1, y1);
-    }
 
     fill(BUILTIN);
     textAlign(RIGHT, BOTTOM);
     text("Built-in Line Drawing Algorithm", 0, 0, width, height);
-    stroke(BUILTIN);
-    // line(x0, y0, x1, y1);
 }
+
+void drawBuiltInLine() {
+    stroke(BUILTIN);
+    line(x0, y0, x1, y1);
+}
+
+void drawCustomLine() {
+    stroke(CUSTOM);
+    // Don't draw anything unless points are min distance away from eachother.
+    if (abs(x0 - x1) > 0 || abs(y0 - y1) > 0) {
+        midpointLine(x0, y0, x1, y1);
+    }
+}
+
+//------------------------------------------------------------ MOUSE EVENTS --//
 
 void mouseMoved() {
     x0 = x1 = mouseX;
@@ -56,6 +77,16 @@ void mouseReleased() {
     x0 = x1 = mouseX;
     y0 = y1 = mouseY;
 }
+
+//--------------------------------------------------------- KEYBOARD EVENTS --//
+
+void keyTyped() {
+    if (key == ENTER || key == RETURN) {
+        drawCustomFirst = !drawCustomFirst;
+    }
+}
+
+//----------------------------------------- MIDPOINT LINE DRAWING ALGORITHM --//
 
 void midpointLine(int x0, int y0, int x1, int y1) {
     // Determine quadrant
