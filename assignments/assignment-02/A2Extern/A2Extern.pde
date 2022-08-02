@@ -2,8 +2,9 @@
 /// Tessa Power (300633153)
 /// A2Extern
 
-/// This sketch demonstrates how a custom DDA (?) line drawing algorithm
-/// compares to the built-in line drawing function from Processing.
+/// This sketch demonstrates how a custom line drawing algorithm based on
+/// Bresenham's midpoint line drawing algorithm compares to the built-in line()
+/// function from Processing.
 
 final color CUSTOM = #048A81;
 final color BUILTIN = #F49F0A;
@@ -12,21 +13,22 @@ int x0 = 0;
 int y0 = 0;
 int x1 = 0;
 int y1 = 0;
-int dx = 10;
-int dy = 10;
 boolean drawCustomFirst = false;
 
 void setup() {
     size(500, 500);
+    frameRate(60);
     textSize(16.0);
-    // Make sure to turn off anti-aliasing
-    noSmooth();
+    noSmooth(); // Make sure to turn off anti-aliasing so we can see raw pixels
 }
 
 void draw() {
     background(255);
 
     drawLabels();
+    // The drawing order changes if the user types enter. By drawing on top of
+    // eachother, we can compare how the algorithm performs and see if there
+    // are any off-by-one errors.
     if (drawCustomFirst) {
         drawCustomLine();
         drawBuiltInLine();
@@ -39,13 +41,17 @@ void draw() {
 // -------------------------------------------------------- DRAWING HELPERS --//
 
 void drawLabels() {
+    fill(0);
+    textAlign(CENTER, TOP);
+    text("Click and drag to draw a line. Press [ Enter ] to change drawing order.", 0, 0, width, height);
+
     fill(CUSTOM);
     textAlign(LEFT, BOTTOM);
-    text("Midpoint Line Drawing Algorithm", 0, 0, width, height);
+    text("Midpoint Line Drawing Algorithm", 8, 0, width, height);
 
     fill(BUILTIN);
     textAlign(RIGHT, BOTTOM);
-    text("Built-in Line Drawing Algorithm", 0, 0, width, height);
+    text("Built-in Line Drawing Algorithm", -8, 0, width, height);
 }
 
 void drawBuiltInLine() {
@@ -89,28 +95,57 @@ void keyTyped() {
 //----------------------------------------- MIDPOINT LINE DRAWING ALGORITHM --//
 
 void midpointLine(int x0, int y0, int x1, int y1) {
-    // Determine quadrant
+    int stepX = 1;
+    int stepY = 1;
+    int dx = x1 - x0;
+    int dy = y1 - y0;
 
-    float a = -(y1 - y0);
-    float b = x1 - x0;
-    float c = x0 * y1 - x1 * y0;
+    // Adjust step direction for negative slope in x-direction
+    if (dx < 0) {
+        dx *= -1;
+        stepX *= -1;
+    }
+
+    // Adjust step direction for negative slope in y-direction
+    if (dy < 0) {
+        dy *= -1;
+        stepY *= -1;
+    }
+
+    // dx and dy are now 2dx and 2dy respectively
+    dx <<= 1;
+    dy <<= 1;
     int x = round(x0);
-    int y = round((-a * x - c) / b);
-    float k = a * (x + 1) + b * (y + 0.5) + c;
+    int y = y0;
 
-    int end = round(x1);
+    // Choose whether to increment by x or y.
+    // We'll use y to handle slopes greater than 1 or less than -1
+    if (dx > dy) {
+        // Calculate fractional portion that we need to move by
+        int fraction = dy - (dx >> 1);
+        while (x != x1) {
+            point(x, y);
+            x += stepX;
 
-    while (x <= end) {
-        point(x, y);
+            if (fraction >= 0) {
+                y += stepY;
+                fraction -= dx;
+            }
 
-        // TODO: Draw other octants
-        if (k > 0) {
-            k += a;
-        } else {
-            k += a + b;
-            y += 1;
+            fraction += dy;
         }
+    } else {
+        int fraction = dx - (dy >> 1);
+        while (y != y1) {
+            point(x, y);
 
-        x += 1;
+            if (fraction >= 0) {
+                x += stepX;
+                fraction -= dy;
+            }
+
+            y += stepY;
+            fraction += dx;
+        }
     }
 }
