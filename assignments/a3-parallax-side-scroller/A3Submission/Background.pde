@@ -40,9 +40,4 @@ public class Background {
               worldToScreenX(c, FOREGROUND.width * ((cX / FOREGROUND.width) + 1), 0, 1),
               0);
     }
-
-    // TODO: Remove y?
-    private int worldToScreenX(Camera c, int x, int y, int z) {
-        return (x - c.position().x) / z;
-    }
- }
+}

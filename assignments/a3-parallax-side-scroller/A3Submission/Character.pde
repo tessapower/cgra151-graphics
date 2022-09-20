@@ -40,10 +40,6 @@ public class Character {
         return pos;
     }
 
-    private int worldToScreenX(Camera c, int x) {
-        return (x - c.position().x);
-    }
-
     abstract class State {
         Direction direction;
         

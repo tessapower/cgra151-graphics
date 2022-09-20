@@ -33,3 +33,14 @@ void keyPressed() {
 void keyReleased() {
     player.handleKeyRelease(keyCode);
 }
+
+
+// ---------------------------------------------------------------- Global Helper Functions --//
+
+public final int worldToScreenX(Camera c, int x) {
+    return (x - c.position().x);
+}
+
+public final int worldToScreenX(Camera c, int x, int y, int z) {
+    return (x - c.position().x) / z;
+}
