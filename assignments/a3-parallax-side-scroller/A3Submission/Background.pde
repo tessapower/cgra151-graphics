@@ -8,13 +8,7 @@ public class Background {
     private final PImage MIDGROUND = loadImage("./background/background_layer_2_sm.png");
     private final PImage FOREGROUND = loadImage("./background/background_layer_3_sm.png");
 
-    private final Dimension windowSize;
-    private Point position;
-
-    Background(Dimension windowSize) {
-        this.windowSize = windowSize;
-        position = new Point(0, 0);
-    }
+    Background() {}
 
     public void draw(Camera c) {
         int cX = c.position().x;

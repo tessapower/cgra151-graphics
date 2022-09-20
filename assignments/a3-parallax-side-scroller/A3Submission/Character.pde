@@ -20,12 +20,16 @@ public class Character {
     }
 
     public void draw(int frameCount, Camera c) {
-        pos.x += xVel;
+        pos.x += (pos.x + xVel < 0 ? 0 : xVel);
         state.draw(frameCount, c);
     }
     
     public Dimension dimension() {
         return DIMENSION;
+    }
+
+    public int speed() {
+      return xVel;
     }
 
     public void handleKeyPress(int keyCode) {

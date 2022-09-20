@@ -1,18 +1,21 @@
 import java.awt.Point;
 
 public class Camera {
-    private Point position = new Point(0, 0);
-    private Dimension bounds;
+    private Point pos = new Point(0, 0);
 
-    public Camera(Dimension screenDimension) {
-        bounds = screenDimension;
-    }
+    public Camera() {}
 
-    public void update(Point characterPos) {
-        // check bounds
+    public void update(Character player) {
+        int playerX = worldToScreenX(this, player.position().x);
+        boolean atRightBoundary = playerX >= 0.8 * width;
+        boolean atLeftBoundary = playerX <= 0.1 * width;
+        boolean atStartOfLevel = pos.x == 0;
+        if (atRightBoundary || (atLeftBoundary && !atStartOfLevel)) {
+            pos.x += player.speed();
+        }
     }
 
     public Point position() {
-        return position;
+        return pos;
     }
 }

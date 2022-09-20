@@ -11,11 +11,10 @@ void setup() {
     imageMode(CORNER);
 
     // Game Setup
-    var screenDim = new Dimension(width, height);
-    camera = new Camera(screenDim);
+    camera = new Camera();
     player = new Character();
-    player.setStartPosition(new Point(width / 5, int(height - player.dimension().height - 5)));
-    parallax = new Background(screenDim);
+    player.setStartPosition(new Point(int(width * 0.1), int(height - player.dimension().height - 5)));
+    parallax = new Background();
 }
 
 void draw() {
@@ -23,7 +22,7 @@ void draw() {
 
     parallax.draw(camera); //<>//
     player.draw(frameCount, camera);
-    camera.update(player.position());
+    camera.update(player);
 }
 
 void keyPressed() {
