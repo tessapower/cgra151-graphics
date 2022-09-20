@@ -8,6 +8,7 @@ public class SpriteSequence {
     private PImage[] sprites;
     private int currentFrame = 0;
     private int numFrames;
+    private int lastFrame;
     private int frameRate = 3;
     boolean loops;
 
@@ -15,6 +16,7 @@ public class SpriteSequence {
         boolean loops) {
         this.dimension = frameDimension;
         this.numFrames = numFrames;
+        lastFrame = numFrames - 1;
         this.loops = loops;
 
         sprites = new PImage[numFrames];
@@ -22,12 +24,17 @@ public class SpriteSequence {
     }
 
     public void update(int frameCount) {
-        // TODO: handle non-looping sprite sequences, what if last frame is skipped?
-        currentFrame = (frameCount / frameRate) % numFrames;
+        if (loops || currentFrame != lastFrame) {
+            currentFrame = (frameCount / frameRate) % numFrames;
+        }
     }
 
     public PImage currentFrame() {
         return sprites[currentFrame];
+    }
+
+    public boolean animationEnded() {
+        return !loops && currentFrame == lastFrame;
     }
     
     public void reset() {
