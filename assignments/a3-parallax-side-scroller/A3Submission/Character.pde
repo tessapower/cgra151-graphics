@@ -58,8 +58,8 @@ public class Character {
             this.direction = direction;
         }
 
-        abstract void handleKeyPress(Character self, int keyCode);
-        abstract void handleKeyRelease(Character self, int keyCode);
+        abstract void handleKeyPress(int keyCode);
+        abstract void handleKeyRelease(int keyCode);
         abstract SpriteSequence spriteSequence();
 
         public void draw(int frameCount, Camera c) {
@@ -92,28 +92,28 @@ public class Character {
         }
 
         @Override
-        public void handleKeyPress(Character self, int keyCode) {
+        public void handleKeyPress(int keyCode) {
             switch(keyCode) {
                 case KeyEvent.VK_D: {
-                    self.xVel = RUNNING_SPEED;
-                    self.state = new Running(Direction.RIGHT);
+                    xVel = RUNNING_SPEED;
+                    state = new Running(Direction.RIGHT);
                     break;
                 }
                 case KeyEvent.VK_A: {
-                    self.xVel = -RUNNING_SPEED;
-                    self.state = new Running(Direction.LEFT);
+                    xVel = -RUNNING_SPEED;
+                    state = new Running(Direction.LEFT);
                     break;
                 }
                 case KeyEvent.VK_SPACE: {
-                    self.yVel = JUMP_HEIGHT;
-                    self.state = new Jumping(direction, self);
+                    yVel = JUMP_HEIGHT;
+                    state = new Jumping(direction);
                     break;
                 }
             }
         }
 
         @Override
-        public void handleKeyRelease(Character self, int keyCode) {
+        public void handleKeyRelease(int keyCode) {
             // No-op: doesn't respond to release key events
         }
 
@@ -138,30 +138,29 @@ public class Character {
         }
 
         @Override
-        public void handleKeyPress(Character self, int keyCode) {
+        public void handleKeyPress(int keyCode) {
             switch(keyCode) {
                 case KeyEvent.VK_D: direction = Direction.RIGHT; break;
                 case KeyEvent.VK_A: direction = Direction.LEFT; break;
                 case KeyEvent.VK_SPACE: {
-                    self.yVel = JUMP_HEIGHT;
-                    self.state = new Jumping(direction, self);
+                    yVel = JUMP_HEIGHT;
+                    state = new Jumping(direction);
                     break;
                 }
-                case KeyEvent.VK_ENTER: println("attack!"); break;
             }
         }
 
         @Override
-        public void handleKeyRelease(Character self, int keyCode) {
+        public void handleKeyRelease(int keyCode) {
             switch(keyCode) {
                 case KeyEvent.VK_D: {
-                    self.xVel = 0;
-                    self.state = new Idling(Direction.RIGHT);
+                    xVel = 0;
+                    state = new Idling(Direction.RIGHT);
                     break;
                 }
                 case KeyEvent.VK_A: {
-                    self.xVel = 0;
-                    self.state = new Idling(Direction.LEFT);
+                    xVel = 0;
+                    state = new Idling(Direction.LEFT);
                     break;
                 }
             }
@@ -183,48 +182,44 @@ public class Character {
         );
         private final int GRAVITY = 1;
 
-        private Character outer;
-
-        Jumping(Direction direction, Character self) {
+        Jumping(Direction direction) {
           super(direction);
           spriteSequence().reset();
-          
-          outer = self;
         }
 
         @Override
         public void draw(int frameCount, Camera c) {
             super.draw(frameCount, c);
-            outer.yVel += GRAVITY;
+            yVel += GRAVITY;
 
-            if (outer.position().y == outer.groundY) {
-                outer.state = (outer.xVel != 0 ? new Running(direction) : new Idling(direction));
+            if (pos.y == groundY) {
+                state = (xVel != 0 ? new Running(direction) : new Idling(direction));
             }
         }
 
         @Override
-        public void handleKeyPress(Character self, int keyCode) {
+        public void handleKeyPress(int keyCode) {
             switch(keyCode) {
                 case KeyEvent.VK_D: {
-                    self.xVel = RUNNING_SPEED;
+                    xVel = RUNNING_SPEED;
                     break;
                 }
                 case KeyEvent.VK_A: {
-                    self.xVel = -RUNNING_SPEED;
+                    xVel = -RUNNING_SPEED;
                     break;
                 }
             }
         }
 
         @Override
-        public void handleKeyRelease(Character self, int keyCode) {
+        public void handleKeyRelease(int keyCode) {
             switch(keyCode) {
                 case KeyEvent.VK_D: {
-                    self.xVel = 0;
+                    xVel = 0;
                     break;
                 }
                 case KeyEvent.VK_A: {
-                    self.xVel = 0;
+                    xVel = 0;
                     break;
                 }
             }
