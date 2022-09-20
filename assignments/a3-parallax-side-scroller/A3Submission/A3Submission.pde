@@ -13,14 +13,16 @@ void setup() {
     // Game Setup
     camera = new Camera();
     player = new Character();
-    player.setStartPosition(new Point(int(width * 0.1), int(height - player.dimension().height - 5)));
+    player.setStartPosition(new Point(
+            int(width * 0.1),
+            int(height - player.dimension().height - 5)));
     parallax = new Background();
 }
 
 void draw() {
     background(255);
 
-    parallax.draw(camera); //<>//
+    parallax.draw(camera);
     player.draw(frameCount, camera);
     camera.update(player);
 }
@@ -33,7 +35,7 @@ void keyReleased() {
     player.handleKeyRelease(keyCode);
 }
 
-// ---------------------------------------------------------------- Global Helper Functions --//
+//--------------------------------------------------------------------- Global Helper Functions --//
 
 public final int worldToScreenX(Camera c, int x) {
     return (x - c.position().x);

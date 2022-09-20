@@ -36,7 +36,7 @@ public class SpriteSequence {
     public boolean animationEnded() {
         return !loops && currentFrame == lastFrame;
     }
-    
+
     public void reset() {
         currentFrame = 0;
     }

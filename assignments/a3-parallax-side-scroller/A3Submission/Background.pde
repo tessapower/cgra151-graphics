@@ -14,24 +14,18 @@ public class Background {
         int cX = c.position().x;
 
         image(BACKGROUND,
-              worldToScreenX(c, BACKGROUND.width * (cX / BACKGROUND.width), 0, 3),
-              0);
+              worldToScreenX(c, BACKGROUND.width * (cX / BACKGROUND.width), 0, 3), 0);
         image(BACKGROUND,
-              worldToScreenX(c, BACKGROUND.width * ((cX / BACKGROUND.width) + 1), 0, 3),
-              0);
+              worldToScreenX(c, BACKGROUND.width * ((cX / BACKGROUND.width) + 1), 0, 3), 0);
 
         image(MIDGROUND,
-              worldToScreenX(c, MIDGROUND.width  * (cX / MIDGROUND.width), 0,2),
-              0);
+              worldToScreenX(c, MIDGROUND.width  * (cX / MIDGROUND.width), 0,2), 0);
         image(MIDGROUND,
-              worldToScreenX(c, MIDGROUND.width  * ((cX / MIDGROUND.width) + 1), 0, 2),
-              0);
+              worldToScreenX(c, MIDGROUND.width  * ((cX / MIDGROUND.width) + 1), 0, 2), 0);
 
         image(FOREGROUND,
-              worldToScreenX(c, FOREGROUND.width * (cX / FOREGROUND.width), 0, 1),
-              0);
+              worldToScreenX(c, FOREGROUND.width * (cX / FOREGROUND.width), 0, 1), 0);
         image(FOREGROUND,
-              worldToScreenX(c, FOREGROUND.width * ((cX / FOREGROUND.width) + 1), 0, 1),
-              0);
+              worldToScreenX(c, FOREGROUND.width * ((cX / FOREGROUND.width) + 1), 0, 1), 0);
     }
 }
