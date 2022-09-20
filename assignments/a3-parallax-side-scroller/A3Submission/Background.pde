@@ -4,9 +4,9 @@ import java.awt.*;
  * A parallax background that extends infinitely in both directions.
  */
 public class Background {
-    private final PImage BACKGROUND = loadImage("./background/background_layer_1_sm.png");
-    private final PImage MIDGROUND = loadImage("./background/background_layer_2_sm.png");
-    private final PImage FOREGROUND = loadImage("./background/background_layer_3_sm.png");
+    private final PImage BACKGROUND = loadImage("./background/background.png");
+    private final PImage MIDGROUND = loadImage("./background/midground.png");
+    private final PImage FOREGROUND = loadImage("./background/foreground.png");
 
     Background() {}
 

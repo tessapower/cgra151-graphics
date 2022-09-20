@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
  */
 public class Character {
     private final Dimension DIMENSION = new Dimension(56, 56);
-    private final PImage SPRITE_SHEET = loadImage("./character/char_blue_sm.png");
+    private final PImage SPRITE_SHEET = loadImage("./character/characterSpriteSheet.png");
 
     protected State state = new Idling(Direction.RIGHT);
 

@@ -4,12 +4,12 @@ import java.awt.*;
  * An animated sequence for a sprite.
  */
 public class SpriteSequence {
+    private final int frameRate = 3;
     private Dimension dimension;
     private PImage[] sprites;
     private int currentFrame = 0;
     private int numFrames;
     private int lastFrame;
-    private int frameRate = 3;
     boolean loops;
 
     public SpriteSequence(PImage spriteSheet, Dimension frameDimension, int rowNum, int numFrames,
