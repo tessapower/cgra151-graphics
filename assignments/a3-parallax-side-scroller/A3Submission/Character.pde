@@ -70,15 +70,20 @@ public class Character {
         public void draw(int frameCount, Camera c) {
             spriteSequence().update(frameCount);
             PImage sprite = spriteSequence().currentFrame(); //<>//
-            //if (direction == Direction.LEFT) {
-            //    pushMatrix();
-            //    scale(-1, 1);
-            //    translate(worldToScreenX(c, pos.x) * -5, 0);
-            //    image(sprite, worldToScreenX(c, pos.x), pos.y);
-            //    popMatrix();
-            //} else {
-                image(sprite, worldToScreenX(c, pos.x), pos.y);
-            //}
+
+            pushMatrix();
+            // First move to character's position
+            translate(worldToScreenX(c, pos.x), pos.y);
+
+            // Handle reflecting the character sprite if going left
+            if (direction == Direction.LEFT) {
+                translate(sprite.width, 0);
+                scale(-1, 1);
+            }
+
+            // Draw the character sprite
+            image(sprite, 0, 0);
+            popMatrix();
         }
     }
 
