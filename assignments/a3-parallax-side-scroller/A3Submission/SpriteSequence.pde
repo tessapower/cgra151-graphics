@@ -1,7 +1,7 @@
 import java.awt.*;
 
 /**
- * Represents an animated sequence for a sprite.
+ * An animated sequence for a sprite.
  */
 public class SpriteSequence {
     private Dimension dimension;

@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 
 /**
- * Represents the player character that a user can move with their keyboard.
+ * The character that a player can move around the screen.
  */
 public class Character {
     private final Dimension DIMENSION = new Dimension(56, 56);
@@ -38,17 +38,22 @@ public class Character {
     }
 
     public void handleKeyPress(int keyCode) {
-        state.handleKeyPress(this, keyCode);
+        state.handleKeyPress(keyCode);
     }
 
     public void handleKeyRelease(int keyCode) {
-        state.handleKeyRelease(this, keyCode);
+        state.handleKeyRelease(keyCode);
     }
 
     public Point position() {
         return pos;
     }
 
+    // ----------------------------------------------------------------------------- States --//
+
+    /**
+     * The state of a character, e.g. running, attacking, jumping.
+     */
     abstract class State {
         protected final int RUNNING_SPEED = 7;
         protected final int JUMP_HEIGHT = -7;
@@ -77,6 +82,9 @@ public class Character {
         }
     }
 
+    /**
+     * Represents when the character is doing nothing and handles transitions from this state.
+     */
     class Idling extends State {
         private final SpriteSequence SPRITE_SEQUENCE = new SpriteSequence(
             SPRITE_SHEET,
@@ -123,6 +131,9 @@ public class Character {
         }
     }
 
+    /**
+     * Represents when the character is running and handles transitions from this state.
+     */
     class Running extends State {
         private final SpriteSequence SPRITE_SEQUENCE = new SpriteSequence(
             SPRITE_SHEET,
@@ -172,6 +183,9 @@ public class Character {
         }
     }
 
+    /**
+     * Represents when the character is jumping and handles transitions from this state.
+     */
     class Jumping extends State {
         private final SpriteSequence SPRITE_SEQUENCE = new SpriteSequence(
             SPRITE_SHEET,

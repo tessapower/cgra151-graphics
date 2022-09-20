@@ -1,5 +1,8 @@
 import java.awt.Point;
 
+/**
+ * Represents the portion of the screen that the player sees.
+ */
 public class Camera {
     private Point pos = new Point(0, 0);
 
