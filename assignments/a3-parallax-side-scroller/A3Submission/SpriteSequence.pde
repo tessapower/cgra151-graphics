@@ -8,7 +8,7 @@ public class SpriteSequence {
     private PImage[] sprites;
     private int currentFrame = 0;
     private int numFrames;
-    private int frameRate = 10;
+    private int frameRate = 3;
     boolean loops;
 
     public SpriteSequence(PImage spriteSheet, Dimension frameDimension, int rowNum, int numFrames,
@@ -26,8 +26,12 @@ public class SpriteSequence {
         currentFrame = (frameCount / frameRate) % numFrames;
     }
 
-    public PImage frame() {
+    public PImage currentFrame() {
         return sprites[currentFrame];
+    }
+    
+    public void reset() {
+        currentFrame = 0;
     }
 
     private void loadSprites(PImage spriteSheet, int rowNum, int numFrames) {

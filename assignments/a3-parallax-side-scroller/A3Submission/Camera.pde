@@ -9,7 +9,7 @@ public class Camera {
     }
 
     public void update(Point characterPos) {
-
+        // check bounds
     }
 
     public Point position() {
