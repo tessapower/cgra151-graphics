@@ -1,6 +1,5 @@
 public class HowToPlayMenu extends Menu {
     private static final float TITLE_FONT_SIZE = 36.0f;
-    private static final float BUFFER = 20;
     private static final String SUBMENU_TITLE = "How to Play";
     private static final String HOW_TO_PLAY =
         "Use the arrow keys to move around."

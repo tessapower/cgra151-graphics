@@ -5,7 +5,7 @@ public class MainMenuScreen implements Screen {
     private final Consumer<ScreenIdentifier> onScreenChange;
 
     private static final String TITLE = "GEOMETEROIDS";
-    private static final float TITLE_FONT_SIZE = 28.0f;
+    private static final float TITLE_FONT_SIZE = 36.0f;
 
     private final PFont titleFont = createFont("outer-space.ttf", TITLE_FONT_SIZE);
 
@@ -14,7 +14,7 @@ public class MainMenuScreen implements Screen {
     private final Menu mainMenu;
     private final Menu howToPlay;
     // private final Menu highScores;
-    // private final Menu credits;
+    private final Menu credits;
 
     public MainMenuScreen(Game game, Consumer<ScreenIdentifier> onScreenChange) {
         this.game = game;
@@ -31,7 +31,7 @@ public class MainMenuScreen implements Screen {
         // highScores = new HighScoresMenu(this::onSubMenuSelection);
 
         // Credits menu
-        // credits = new CreditsMenu(this::onSubMenuSelection);
+        credits = new CreditsMenu(this::onSubMenuSelection);
 
         displayedSubMenu = mainMenu;
         println("Displaying main menu.");
@@ -83,8 +83,7 @@ public class MainMenuScreen implements Screen {
             }
             // TODO: Maybe address these in a separate method called onSubMenuClose()
             case CREDITS: {
-                // displayedSubMenu = credits;
-                println("Displaying credits.");
+                displayedSubMenu = credits;
                 break;
             }
             case HIGH_SCORES: {
