@@ -34,7 +34,6 @@ public class MainMenuScreen implements Screen {
         credits = new CreditsMenu(this::onSubMenuSelection);
 
         displayedSubMenu = mainMenu;
-        println("Displaying main menu.");
     }
 
     public void handleKeyPressed(int keyCode) {
@@ -72,7 +71,6 @@ public class MainMenuScreen implements Screen {
             case ONE_PLAYER: {
                 // Settings.shared().setPlayerMode(MultiplayerMode.SINGLE_PLAYER);
                 onScreenChange.accept(ScreenIdentifier.PLAYING);
-                println("Playing in single player mode.");
                 break;
             }
             case TWO_PLAYER: {
