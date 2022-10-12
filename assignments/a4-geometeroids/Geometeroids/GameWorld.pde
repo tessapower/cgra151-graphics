@@ -9,6 +9,7 @@ public class GameWorld {
     private final GameState gameState;
 
     // private final GeometeroidsGenerator geometeroids;
+    private final List<Geometeroid> geometeroids = new ArrayList<>();
 
     // private final HeadsUpDisplay hud;
 
@@ -29,11 +30,17 @@ public class GameWorld {
 
         // Geometeroids Generator
         // geometeroids = new GeometeroidsGenerator(this);
+
+        // Geometeroids
+        // TODO: Remove this in favour of generating waves
+        for (int i = 0; i < 10; i++) {
+            geometeroids.add(new Geometeroid());
+        }
     }
 
     public void update(int frameCount) {
         // hud.update();
-        playerOne.update(frameCount);
+        playerOne.update();
 
         for (Iterator<Bullet> it = bullets.iterator(); it.hasNext(); ) {
             var bullet = it.next();
@@ -44,16 +51,21 @@ public class GameWorld {
         }
 
         // geometeroids.update(int frameCount);
+        geometeroids.forEach(Geometeroid::update);
+
         handleCollisions();
 
         bulletsCooldown--;
         bulletsCooldown = Math.max(bulletsCooldown, 0);
 
         background(0);
-        // hud.draw();
+
         playerOne.draw();
         bullets.forEach(b -> b.draw());
         // geometeroids.draw();
+        geometeroids.forEach(Geometeroid::draw);
+
+        // hud.draw();
     }
 
     public void handleKeyPressed(int keyCode) {

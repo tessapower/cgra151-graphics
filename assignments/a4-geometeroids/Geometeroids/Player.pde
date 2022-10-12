@@ -27,7 +27,7 @@
         SHIP.endShape(CLOSE);
     }
 
-    public void update(int frameCount) {
+    public void update() {
         if (accelerating) {
             velocity.add(PVector.fromAngle(radians(rotation)).mult(THRUST_INCREMENT));
             velocity.limit(TOP_SPEED);
