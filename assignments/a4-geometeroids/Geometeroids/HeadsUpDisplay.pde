@@ -30,10 +30,12 @@ public class HeadsUpDisplay {
     }
 
     private String padZeroes(int number, int length) {
-        String numberStr = Integer.toString(number);
-        while (numberStr.length() < length) {
-            numberStr = "0" + numberStr;
+        var str = Integer.toString(number);
+
+        while (str.length() < length) {
+            str = "0" + str;
         }
-        return numberStr;
+
+        return str;
     }
 }

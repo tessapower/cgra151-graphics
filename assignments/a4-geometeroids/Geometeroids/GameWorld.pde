@@ -123,15 +123,15 @@ public class GameWorld {
         //         // TODO: Create bullet class with overlap detection
         //         if (geometeroid.collidesWith(bullet)) {
         //             bulletIterator.remove();
-        //             // TODO: add new geometeroids to the spawning system
-        //             geometeroid.hit();
-
         //             if (geometeroid.isDestroyed()) {
-        //                 explosions.add(new Explosion(geometeroid.location()));
+        //                 explosions.add(geometeroid.explode());
 
         //                 geomIterator.remove();
+        //             } else {
+        //                 // TODO: add new geometeroids to the spawning system
+        //                 geometeroids.split(geometeroid);
+        //                 explosions.add(new Explosion(geometeroid.position(), geometeroid.getColor()));
         //             }
-
         //             break;
         //         }
         //     }
