@@ -12,7 +12,7 @@ public class GameWorld {
     private final List<Explosion> explosions = new ArrayList<>();
     private final List<Geometeroid> geometeroids = new ArrayList<>();
 
-    // private final HeadsUpDisplay hud;
+    private final HeadsUpDisplay hud;
 
     private List<Bullet> bullets = new ArrayList<>();
     private int bulletsCooldown = 0;
@@ -24,7 +24,7 @@ public class GameWorld {
         this.gameState = gameState;
 
         // HUD
-        // hud = new HeadsUpDisplay(this);
+        hud = new HeadsUpDisplay();
 
         // Player
         playerOne = new Player();
@@ -40,7 +40,6 @@ public class GameWorld {
     }
 
     public void update(int frameCount) {
-        // hud.update();
         playerOne.update();
 
         bullets.forEach(Bullet::update);
@@ -67,7 +66,7 @@ public class GameWorld {
         // explosions
         explosions.forEach(Explosion::draw);
 
-        // hud.draw();
+        hud.draw();
     }
 
     public void handleKeyPressed(int keyCode) {
