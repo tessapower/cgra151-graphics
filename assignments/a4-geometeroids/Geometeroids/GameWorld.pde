@@ -9,6 +9,7 @@ public class GameWorld {
     private final GameState gameState;
 
     // private final GeometeroidsGenerator geometeroids;
+    private final List<Explosion> explosions = new ArrayList<>();
     private final List<Geometeroid> geometeroids = new ArrayList<>();
 
     // private final HeadsUpDisplay hud;
@@ -42,16 +43,14 @@ public class GameWorld {
         // hud.update();
         playerOne.update();
 
-        for (Iterator<Bullet> it = bullets.iterator(); it.hasNext(); ) {
-            var bullet = it.next();
-            bullet.update();
-            if (bullet.isOffScreen()) {
-                it.remove();
-            }
-        }
+        bullets.forEach(Bullet::update);
+        bullets.removeIf(Bullet::isOffScreen);
 
         // geometeroids.update(int frameCount);
         geometeroids.forEach(Geometeroid::update);
+
+        explosions.forEach(Explosion::update);
+        explosions.removeIf(Explosion::isDone);
 
         handleCollisions();
 
@@ -64,6 +63,9 @@ public class GameWorld {
         bullets.forEach(b -> b.draw());
         // geometeroids.draw();
         geometeroids.forEach(Geometeroid::draw);
+
+        // explosions
+        explosions.forEach(Explosion::draw);
 
         // hud.draw();
     }
