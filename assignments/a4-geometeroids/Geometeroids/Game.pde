@@ -10,8 +10,8 @@ public class Game {
         activeScreen = new MainMenuScreen(this, this::requestScreenChange);
     }
 
-    public void update(int frameCount) {
-        activeScreen.update(frameCount);
+    public void update() {
+        activeScreen.update();
     }
 
     public void handleKeyPressed(int keyCode) {

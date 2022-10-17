@@ -26,8 +26,12 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void update(int frameCount) {
-        world.update(frameCount);
+    public void update() {
+        if (!gameState.isGameOver()) {
+            world.update();
+        } else {
+            onGameOver(gameState.score());
+        }
     }
 
     @Override
