@@ -59,9 +59,9 @@ public class MainMenuScreen implements Screen {
         return ScreenIdentifier.SHOWING_MENU;
     }
 
-    // TODO: maybe rename this method to draw()
-    void update(int frameCount) {
-        background(0);
+    @Override
+    void update() {
+        background(Colors.BACKGROUND);
         drawTitle();
         displayedSubMenu.update();
     }
