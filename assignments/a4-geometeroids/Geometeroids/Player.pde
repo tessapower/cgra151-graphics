@@ -3,7 +3,7 @@
     private final int OFF_SCREEN_BUFFER = 10;
     private final PShape SHIP;
     private final Thruster THRUSTER = new Thruster();
-    private final int ANGLE_INCREMENT = 6;
+    private final int ANGLE_INCREMENT = 3;
     private final float THRUST_INCREMENT = 0.1f;
     private final float DECELERATION = 0.99f;
     private final float TOP_SPEED = 5.0f;
@@ -15,6 +15,8 @@
     private PVector velocity = new PVector(0, 0);
     private int rotation = -90;
     private boolean accelerating = false;
+    private boolean turning = false;
+    private int amountToTurn = 0;
 
     public Player() {
         SHIP = createShape();
@@ -29,6 +31,12 @@
     }
 
     public void update() {
+        if (turning) {
+            rotation += amountToTurn;
+            SHIP.rotate(radians(amountToTurn));
+            THRUSTER.rotate(radians(amountToTurn));
+        }
+
         if (accelerating) {
             velocity.add(PVector.fromAngle(radians(rotation)).mult(THRUST_INCREMENT));
             velocity.limit(TOP_SPEED);
@@ -72,15 +80,22 @@
     }
 
     public void turnLeft() {
-        rotation -= ANGLE_INCREMENT;
-        SHIP.rotate(radians(-ANGLE_INCREMENT));
-        THRUSTER.rotate(radians(-ANGLE_INCREMENT));
+        if (!turning) {
+            turning = true;
+            amountToTurn = -ANGLE_INCREMENT;
+        }
     }
 
     public void turnRight() {
-        rotation += ANGLE_INCREMENT;
-        SHIP.rotate(radians(ANGLE_INCREMENT));
-        THRUSTER.rotate(radians(ANGLE_INCREMENT));
+        if (!turning) {
+            turning = true;
+            amountToTurn = ANGLE_INCREMENT;
+        }
+    }
+
+    public void stopTurning() {
+        turning = false;
+        amountToTurn = 0;
     }
 
     public PVector position() {

@@ -17,6 +17,7 @@ public class GameWorld {
     private Explosion playerExplosion = null;
     private List<Bullet> bullets = new ArrayList<>();
     private int bulletsCooldown = 0;
+    private boolean firing = false;
 
     private Player player;
 
@@ -37,6 +38,10 @@ public class GameWorld {
 
     public void update() {
         // Let everything update
+        if (firing && bulletsCooldown == 0) {
+            bullets.add(player.fire());
+            bulletsCooldown = 5;
+        }
         bullets.forEach(Bullet::update);
         bullets.removeIf(Bullet::isOffScreen);
 
@@ -89,17 +94,22 @@ public class GameWorld {
                 player.accelerate();
                 break;
             case KeyEvent.VK_SPACE:
-                if (bulletsCooldown == 0) {
-                    bullets.add(player.fire());
-                    bulletsCooldown = 5;
-                }
+                firing = true;
                 break;
         }
     }
 
     public void handleKeyReleased(int keyCode) {
-        if (keyCode == KeyEvent.VK_UP) {
-            player.decelerate();
+        switch(keyCode) {
+            case KeyEvent.VK_LEFT: case KeyEvent.VK_RIGHT:
+                player.stopTurning();
+                break;
+            case KeyEvent.VK_UP:
+                player.decelerate();
+                break;
+            case KeyEvent.VK_SPACE:
+                firing = false;
+                break;
         }
     }
 
