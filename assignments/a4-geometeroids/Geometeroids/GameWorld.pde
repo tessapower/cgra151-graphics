@@ -37,8 +37,6 @@ public class GameWorld {
 
     public void update() {
         // Let everything update
-        player.update();
-
         bullets.forEach(Bullet::update);
         bullets.removeIf(Bullet::isOffScreen);
 
@@ -46,6 +44,15 @@ public class GameWorld {
 
         explosions.forEach(Explosion::update);
         explosions.removeIf(Explosion::isDone);
+
+        if (playerExplosion != null) {
+            playerExplosion.update();
+            if (playerExplosion.isDone()) {
+                gameOverNotifier.accept(gameState.score());
+            }
+        } else {
+            player.update();
+        }
 
         handleCollisions();
 
@@ -55,7 +62,12 @@ public class GameWorld {
         // Draw everything to the screen
         background(Colors.BACKGROUND);
 
-        player.draw();
+        if (playerExplosion != null) {
+            playerExplosion.draw();
+        } else {
+            player.draw();
+        }
+
         bullets.forEach(b -> b.draw());
         geometeroids.forEach(Geometeroid::draw);
 
@@ -104,11 +116,11 @@ public class GameWorld {
             }
         }
 
-        geometeroids.removeIf(Geometeroid::isDestroyed);
-
-        if (gameState.isGameOver()) {
+        if (gameState.playerDied() && playerExplosion == null) {
             playerExplosion = player.explode();
         }
+
+        geometeroids.removeIf(Geometeroid::isDestroyed);
 
         // Check for collisions between player bullets and Geometeroids
         for (Iterator<Bullet> bulletIterator = bullets.iterator(); bulletIterator.hasNext(); ) {

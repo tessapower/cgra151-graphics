@@ -55,6 +55,7 @@ public class GameOverScreen implements Screen {
 
     @Override
     public void update() {
+        background(Colors.BACKGROUND);
         drawTitle();
         buttonGroup.buttons().forEach(Button::draw);
     }

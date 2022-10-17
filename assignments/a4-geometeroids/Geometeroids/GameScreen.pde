@@ -31,11 +31,7 @@ public class GameScreen implements Screen {
 
     @Override
     public void update() {
-        if (!gameState.isGameOver()) {
-            world.update();
-        } else {
-            onGameOver(gameState.score());
-        }
+        world.update();
     }
 
     @Override

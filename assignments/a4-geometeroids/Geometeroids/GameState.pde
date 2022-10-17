@@ -12,6 +12,10 @@ public enum GameState {
         return livesLeft;
     }
 
+    public boolean playerDied() {
+        return livesLeft() == 0;
+    }
+
     public void addPoints(int score) {
         this.score += score;
         if (score % 100 == 0) {

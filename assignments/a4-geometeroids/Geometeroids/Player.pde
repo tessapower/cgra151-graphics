@@ -117,6 +117,6 @@
     }
 
     public Explosion explode() {
-        return new Explosion(position, int(velocity.mag() * 10), Colors.Player.EXPLOSION);
+        return new Explosion(position, 250, Colors.Player.EXPLOSION);
     }
 }
