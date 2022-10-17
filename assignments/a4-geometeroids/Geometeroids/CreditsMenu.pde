@@ -1,11 +1,10 @@
+// A menu to display attributions
 class CreditsMenu extends Menu {
     private static final float TITLE_FONT_SIZE = 36.0f;
     private static final String SUBMENU_TITLE = "Credits";
     private static final String CREDIT_TEXT =
-        "\"Retro Gaming\" font by Damyrius."
-        + "\n\n\"Outer Space\" font by Hoverglow."
-        + "\n\nSound Effects by Juhani Junkala (CC0)."
-        + "\n\nMusic by Steven Melin (CC0).";
+        "\"Retro Gaming\" font by Damyrius. (CC0)"
+        + "\n\n\"Outer Space\" font by Hoverglow.(CC0)";
 
     private final Button close = new Button("close");
     private final PFont titleFont = createFont("retro-gaming.ttf", TITLE_FONT_SIZE);
