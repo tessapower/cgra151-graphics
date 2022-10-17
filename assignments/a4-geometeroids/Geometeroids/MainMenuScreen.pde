@@ -11,7 +11,9 @@ public class MainMenuScreen implements Screen {
     private final List<Geometeroid> geometeroids = new ArrayList<>();
 
     private final PFont titleFont = createFont("outer-space.ttf", TITLE_FONT_SIZE);
+    private static final int SHADOW_OFFSET = 1;
 
+    private Point titlePos;
     private Menu displayedSubMenu;
 
     private final Menu mainMenu;
@@ -37,6 +39,9 @@ public class MainMenuScreen implements Screen {
         credits = new CreditsMenu(this::onSubMenuSelection);
 
         displayedSubMenu = mainMenu;
+
+        titlePos = new Point(width / 2, height / 5);
+
         // Add geometeroids
         // TODO: Add factory method that generates given # of random geometeroids
         //   given a randomSeed
@@ -70,10 +75,22 @@ public class MainMenuScreen implements Screen {
     }
 
     private void drawTitle() {
-        fill(Colors.Text.PRIMARY);
-        textFont(titleFont);
         textAlign(CENTER, CENTER);
-        text(TITLE, width / 2, height / 5);
+        textFont(titleFont);
+        // Draw the title shadow to make it stand out against
+        // anything moving behind it
+        drawFontStroke();
+
+        fill(Colors.Text.PRIMARY);
+        text(TITLE, titlePos.x, titlePos.y);
+    }
+
+    private void drawFontStroke() {
+        fill(Colors.BACKGROUND);
+        text(TITLE, titlePos.x + SHADOW_OFFSET, titlePos.y + SHADOW_OFFSET);
+        text(TITLE, titlePos.x - SHADOW_OFFSET, titlePos.y + SHADOW_OFFSET);
+        text(TITLE, titlePos.x + SHADOW_OFFSET, titlePos.y - SHADOW_OFFSET);
+        text(TITLE, titlePos.x - SHADOW_OFFSET, titlePos.y - SHADOW_OFFSET);
     }
 
     private void onSubMenuSelection(SubMenuOption subMenuOption) {
