@@ -1,3 +1,4 @@
+// An explosion made with a custom particle system!
 public class Explosion {
     private List<Particle> particles = new ArrayList<>();
     protected color c;

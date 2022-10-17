@@ -15,7 +15,6 @@ class CreditsMenu extends Menu {
     private int helpTextMaxWidth;
     private int helpTextMaxHeight;
 
-    // TODO: Maybe convert this into a Submenu that just takes a Consumer onClose
     public CreditsMenu(Consumer<SubMenuOption> subMenuSelectionNotifier) {
         super(subMenuSelectionNotifier);
 

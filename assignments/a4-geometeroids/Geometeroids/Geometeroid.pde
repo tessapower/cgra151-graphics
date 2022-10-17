@@ -28,7 +28,6 @@ public class Geometeroid {
             var y = sin(a) * sideLength;
             polygon.vertex(x, y);
         }
-        polygon.noStroke();
         polygon.fill(type.getColor());
         polygon.rotate(radians(ROTATION));
         polygon.endShape(CLOSE);

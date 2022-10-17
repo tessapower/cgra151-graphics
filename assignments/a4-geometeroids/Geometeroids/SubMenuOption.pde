@@ -1,6 +1,5 @@
 public enum SubMenuOption {
-    ONE_PLAYER,
-    TWO_PLAYER,
+    PLAY,
     HOW_TO_PLAY,
     HIGH_SCORES,
     CREDITS,

@@ -1,3 +1,4 @@
+// A HUD to display the current state of the game
 public class HeadsUpDisplay {
     private static final String SCORE = "SCORE: ";
     private static final String LIVES = "LIVES: ";

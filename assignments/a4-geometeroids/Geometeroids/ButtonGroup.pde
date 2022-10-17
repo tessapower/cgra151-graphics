@@ -28,7 +28,6 @@ public class ButtonGroup {
 
     public void next() {
         if (focusIdx < buttons.size() - 1) {
-            // SoundEffects.shared().menuMove().play();
             buttons.get(focusIdx).setFocussed(false);
             focusIdx++;
             buttons.get(focusIdx).setFocussed(true);
@@ -37,7 +36,6 @@ public class ButtonGroup {
 
     public void previous() {
         if (focusIdx > 0) {
-            // SoundEffects.shared().menuMove().play();
             buttons.get(focusIdx).setFocussed(false);
             focusIdx--;
             buttons.get(focusIdx).setFocussed(true);

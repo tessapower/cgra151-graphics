@@ -1,3 +1,4 @@
+// The thruster for a player's ship
 public class Thruster {
     private final PShape bigThruster;
     private final PShape mediumThruster;

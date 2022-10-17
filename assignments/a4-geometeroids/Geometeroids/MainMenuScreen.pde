@@ -1,5 +1,6 @@
 import java.util.function.Consumer;
 
+// Represents everything that appears on the main menu screen
 public class MainMenuScreen implements Screen {
     private final Game game;
     private final Consumer<ScreenIdentifier> onScreenChange;
@@ -54,7 +55,6 @@ public class MainMenuScreen implements Screen {
     void update(int frameCount) {
         background(0);
         drawTitle();
-        // TODO: Maybe rename this method to draw()
         displayedSubMenu.update();
     }
 
@@ -68,18 +68,10 @@ public class MainMenuScreen implements Screen {
     private void onSubMenuSelection(SubMenuOption subMenuOption) {
         // Set displayed menu
         switch(subMenuOption) {
-            case ONE_PLAYER: {
-                // Settings.shared().setPlayerMode(MultiplayerMode.SINGLE_PLAYER);
+            case PLAY: {
                 onScreenChange.accept(ScreenIdentifier.PLAYING);
                 break;
             }
-            case TWO_PLAYER: {
-                // Settings.shared().setPlayerMode(MultiplayerMode.MULTIPLAYER);
-                onScreenChange.accept(ScreenIdentifier.PLAYING);
-                println("Playing in multiplayer mode.");
-                break;
-            }
-            // TODO: Maybe address these in a separate method called onSubMenuClose()
             case CREDITS: {
                 displayedSubMenu = credits;
                 break;

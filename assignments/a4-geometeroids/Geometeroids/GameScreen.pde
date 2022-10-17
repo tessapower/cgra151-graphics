@@ -6,24 +6,18 @@ public class GameScreen implements Screen {
     private final GameWorld world = new GameWorld(this::onGameOver, gameState);
 
     public GameScreen(Consumer<ScreenIdentifier> onScreenChange) {
-        // SoundEffects.shared().backgroundMusic().playOnLoop();
         this.onScreenChange = onScreenChange;
         gameState.reset();
     }
 
     public void onGameOver(int finalScore) {
-        // TODO: set the high score?
         println("Final score: " + finalScore);
         onScreenChange.accept(ScreenIdentifier.SHOWING_GAME_OVER);
     }
 
     @Override
     public void handleKeyPressed(int keyCode) {
-        if (keyCode == KeyEvent.VK_P) {
-            // TODO: Toggle pause
-        } else {
-            world.handleKeyPressed(keyCode);
-        }
+        world.handleKeyPressed(keyCode);
     }
 
     @Override

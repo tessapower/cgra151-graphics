@@ -1,6 +1,4 @@
-/**
- *
- */
+// A class that represents the player!
  public class Player {
     private final int OFF_SCREEN_BUFFER = 10;
     private final PShape SHIP;
