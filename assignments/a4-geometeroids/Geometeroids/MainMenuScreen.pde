@@ -16,7 +16,7 @@ public class MainMenuScreen implements Screen {
 
     private final Menu mainMenu;
     private final Menu howToPlay;
-    // private final Menu highScores;
+    private final Menu highScores;
     private final Menu credits;
 
     public MainMenuScreen(Game game, Consumer<ScreenIdentifier> onScreenChange) {
@@ -85,8 +85,8 @@ public class MainMenuScreen implements Screen {
                 break;
             }
             case HIGH_SCORES: {
-                // displayedSubMenu = highScores;
-                println("Displaying high scores.");
+                displayedSubMenu = highScores;
+                // println("Displaying high scores.");
                 break;
             }
             case HOW_TO_PLAY: {
