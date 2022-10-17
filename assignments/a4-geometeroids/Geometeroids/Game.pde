@@ -24,7 +24,7 @@ public class Game {
 
     public void requestScreenChange(ScreenIdentifier newScreen) {
         if (activeScreen != null && activeScreen.screen() == newScreen) return;
-        if (activeScreen != null) background(0);
+        if (activeScreen != null) background(Colors.BACKGROUND);
 
         switch(newScreen) {
             case SHOWING_MENU: {

@@ -7,7 +7,7 @@ public class Bullet {
 
     public Bullet(PVector position, PVector playerVel, int rotation) {
         BULLET = createShape(RECT, -5, 0, 10, 2);
-        BULLET.setFill(color(255, 0, 0));
+        BULLET.setFill(Colors.Player.BULLET);
         BULLET.setStroke(false);
 
         this.ROTATION = rotation;

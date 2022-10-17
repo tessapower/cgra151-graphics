@@ -1,5 +1,5 @@
+// This represents all of the different polygon shapes
 public enum PolygonType {
-    // TODO: replace with colors from Color book
     TRIANGLE(3, Colors.Polygons.TRIANGLE),
     SQUARE(4,   Colors.Polygons.SQUARE),
     PENTAGON(5, Colors.Polygons.PENTAGON),
