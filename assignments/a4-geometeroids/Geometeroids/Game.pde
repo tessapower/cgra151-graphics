@@ -40,15 +40,16 @@ public class Game {
                 if (activeGame == null) {
                     activeGame = new GameScreen(this::requestScreenChange);
                 }
-
-                // TODO: not sure if this is necessary
-                // setPaused(false);
                 activeScreen = activeGame;
                 break;
             }
             case SHOWING_GAME_OVER: {
                 assert activeScreen != null;
-                // activeScreen = new GameOverScreen(this, this::requestScreenChange, ((PlayGameScreen) activeScreen).gameState());
+                if (activeGame != null) {
+                    activeGame = null;
+                }
+
+                activeScreen = new GameOverScreen(this::requestScreenChange);
                 break;
             }
         }

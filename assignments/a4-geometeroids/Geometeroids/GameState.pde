@@ -12,16 +12,23 @@ public enum GameState {
         return livesLeft;
     }
 
-    public void updateScore(int score) {
+    public void addPoints(int score) {
         this.score += score;
+        if (score % 100 == 0) {
+            livesLeft++;
+        }
     }
 
-    public void updateLivesLeft(int livesLeft) {
-        this.livesLeft += livesLeft;
+    public void loseALife() {
+        livesLeft--;
     }
 
     public void reset() {
         score = 0;
         livesLeft = 3;
+    }
+
+    public boolean isGameOver() {
+        return livesLeft == 0;
     }
 }
