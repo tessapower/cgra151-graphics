@@ -28,12 +28,14 @@ public class HighScores {
     }
 
     public void addScore(int score) {
-        scores.append(score);
-        scores.sortReverse();
-        while (scores.size() > MAX_TO_SAVE) {
-            scores.remove(MAX_TO_SAVE);
+        if (score > 0) {
+            scores.append(score);
+            scores.sortReverse();
+            while (scores.size() > MAX_TO_SAVE) {
+                scores.remove(MAX_TO_SAVE);
+            }
+            saveScoresToFile();
         }
-        saveScoresToFile();
     }
 
     private void saveScoresToFile() {
@@ -43,6 +45,6 @@ public class HighScores {
             entries.append(scores.get(i));
         }
 
-        saveJSONArray(entries, "highscores.json");
+        saveJSONArray(entries, "data/highscores.json");
     }
 }
