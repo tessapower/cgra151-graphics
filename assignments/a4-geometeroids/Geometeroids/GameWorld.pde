@@ -6,7 +6,7 @@ import java.util.Iterator;
 
 public class GameWorld {
     private final IntConsumer gameOverNotifier;
-    private final GameState gameState;
+    private final GameState gameState = GameState.INSTANCE;
 
     private final List<Geometeroid> geometeroids = new ArrayList<>();
 
@@ -20,9 +20,8 @@ public class GameWorld {
 
     private Player player;
 
-    public GameWorld(IntConsumer gameOverNotifier, GameState gameState) {
+    public GameWorld(IntConsumer gameOverNotifier) {
         this.gameOverNotifier = gameOverNotifier;
-        this.gameState = gameState;
 
         // HUD
         hud = new HeadsUpDisplay();

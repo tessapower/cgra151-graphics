@@ -3,6 +3,7 @@ import java.util.function.Consumer;
 // The main game handler class, handles changing between screens and passing along
 // user input to the currently active screen
 public class Game {
+    private final HighScores highScores = new HighScores();
     private Screen activeScreen = null;
     private GameScreen activeGame = null;
 
@@ -38,7 +39,7 @@ public class Game {
             }
             case PLAYING: {
                 if (activeGame == null) {
-                    activeGame = new GameScreen(this::requestScreenChange);
+                    activeGame = new GameScreen(highScores, this::requestScreenChange);
                 }
                 activeScreen = activeGame;
                 break;

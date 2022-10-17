@@ -24,7 +24,7 @@ public class HighScores {
     }
 
     public boolean isHighScore(int score) {
-        return score > scores.min();
+        return (scores.size() > 0 ? score > scores.min() : true);
     }
 
     public void addScore(int score) {
