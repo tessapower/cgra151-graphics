@@ -61,7 +61,10 @@ public class MainMenuScreen implements Screen {
 
     @Override
     void update() {
+        geometeroids.forEach(Geometeroid::update);
+
         background(Colors.BACKGROUND);
+        geometeroids.forEach(Geometeroid::draw);
         drawTitle();
         displayedSubMenu.update();
     }
