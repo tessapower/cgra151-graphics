@@ -8,11 +8,13 @@ public class GameWorld {
     private final IntConsumer gameOverNotifier;
     private final GameState gameState;
 
-    private final List<Explosion> explosions = new ArrayList<>();
     private final List<Geometeroid> geometeroids = new ArrayList<>();
+
+    private final List<Explosion> explosions = new ArrayList<>();
 
     private final HeadsUpDisplay hud;
 
+    private Explosion playerExplosion = null;
     private List<Bullet> bullets = new ArrayList<>();
     private int bulletsCooldown = 0;
 
@@ -92,36 +94,46 @@ public class GameWorld {
 
     public void handleCollisions() {
         // Check for collisions between player and Geometeroids
-        // for (Geometeroid geometeroid : geometeroids.asList()) {
-        //     if (playerOne.collidesWith(geometeroid)) {
-        //         playerOne.loseALife();
-        //
-        //         if (playerOne.isDead()) {
-        //              gameOverNotifier.accept(gameState.score());
-        //         }
-        //     }
-        // }
+        for (var g : geometeroids) {
+            if (player.collidesWith(g)) {
+                g.destroy();
+                explosions.add(g.explode());
+                gameState.loseALife();
+                player.hit();
+
+                break;
+            }
+        }
+
+        geometeroids.removeIf(Geometeroid::isDestroyed);
+
+        if (gameState.isGameOver()) {
+            playerExplosion = player.explode();
+        }
 
         // Check for collisions between player bullets and Geometeroids
-        // for (Iterator<Bullet> bulletIterator = bullets.iterator(); it.hasNext(); ) {
-        //     var bullet = bulletIterator.next();
-        //     for (Iterator<Geometeroid> geomIterator = geometeroids.asList().iterator(); geomIt.hasNext(); ) {
-        //         var geometeroid = geomIterator.next();
-        //         // TODO: Create bullet class with overlap detection
-        //         if (geometeroid.collidesWith(bullet)) {
-        //             bulletIterator.remove();
-        //             if (geometeroid.isDestroyed()) {
-        //                 explosions.add(geometeroid.explode());
+        for (Iterator<Bullet> bulletIterator = bullets.iterator(); bulletIterator.hasNext(); ) {
+            var bullet = bulletIterator.next();
+            for (Iterator<Geometeroid> geomIterator = geometeroids.iterator(); geomIterator.hasNext(); ) {
+                var geometeroid = geomIterator.next();
 
-        //                 geomIterator.remove();
-        //             } else {
-        //                 // TODO: add new geometeroids to the spawning system
-        //                 geometeroids.split(geometeroid);
-        //                 explosions.add(new Explosion(geometeroid.position(), geometeroid.getColor()));
-        //             }
-        //             break;
-        //         }
-        //     }
-        // }
+                if (geometeroid.contains(bullet.position())) {
+                    bulletIterator.remove();
+                    geometeroid.hit();
+
+                    if (geometeroid.isDestroyed()) {
+                        explosions.add(geometeroid.explode());
+                        // geometeroids.split(geometeroid);
+                        gameState.addPoints(geometeroid.scorePoints());
+                        geomIterator.remove();
+                    } else {
+                        // show geometeroid was hit
+                        explosions.add(geometeroid.impact());
+                    }
+
+                    break;
+                }
+            }
+        }
     }
 }

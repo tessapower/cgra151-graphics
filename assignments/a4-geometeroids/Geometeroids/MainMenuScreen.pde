@@ -8,6 +8,8 @@ public class MainMenuScreen implements Screen {
     private static final String TITLE = "GEOMETEROIDS";
     private static final float TITLE_FONT_SIZE = 36.0f;
 
+    private final List<Geometeroid> geometeroids = new ArrayList<>();
+
     private final PFont titleFont = createFont("outer-space.ttf", TITLE_FONT_SIZE);
 
     private Menu displayedSubMenu;
@@ -29,12 +31,18 @@ public class MainMenuScreen implements Screen {
         howToPlay = new HowToPlayMenu(this::onSubMenuSelection);
 
         // High scores menu
-        // highScores = new HighScoresMenu(this::onSubMenuSelection);
+        highScores = new HighScoresMenu(this::onSubMenuSelection);
 
         // Credits menu
         credits = new CreditsMenu(this::onSubMenuSelection);
 
         displayedSubMenu = mainMenu;
+        // Add geometeroids
+        // TODO: Add factory method that generates given # of random geometeroids
+        //   given a randomSeed
+        for (int i = 0; i < 10; i++) {
+            geometeroids.add(new Geometeroid());
+        }
     }
 
     public void handleKeyPressed(int keyCode) {

@@ -10,6 +10,7 @@ public class Geometeroid {
     private PVector position = new PVector(random(width), random(height));
     private PVector velocity = PVector.fromAngle(radians(random(360))).mult(int(random(1, 3)));
     private boolean isDestroyed = false;
+    private int hitPoints;
 
     public Geometeroid() {
         this(PolygonType.values()[int(random(PolygonType.values().length))]);
@@ -18,7 +19,8 @@ public class Geometeroid {
     public Geometeroid(PolygonType type) {
         this.type = type;
 
-        sideLength = int(type.getSideLength());
+        sideLength = int(type.sideLength());
+        hitPoints = type.numSides();
 
         polygon = createShape();
         polygon.beginShape();
@@ -58,8 +60,14 @@ public class Geometeroid {
         popMatrix();
     }
 
+    public void setPosition(PVector pos) {
+        this.position = pos;
+    }
+
     public void hit() {
-        isDestroyed = type == PolygonType.TRIANGLE;
+        // Reduce number of hit points to split the Geometeroid
+        hitPoints--;
+        isDestroyed = hitPoints <= 0;
     }
 
     public int numSides() {
@@ -70,7 +78,35 @@ public class Geometeroid {
         return sideLength;
     }
 
+    public void destroy() {
+        isDestroyed = true;
+    }
+
     public boolean isDestroyed() {
         return isDestroyed;
+    }
+
+    public PVector position() {
+        return position;
+    }
+
+    public color getColor() {
+        return type.getColor();
+    }
+
+    public boolean contains(PVector point) {
+        return point.dist(position) < sideLength;
+    }
+
+    public Explosion explode() {
+        return new Explosion(position, sideLength * type.numSides() * 10, type.getColor());
+    }
+
+    public Explosion impact() {
+        return new Explosion(position, sideLength * type.numSides(), type.getColor());
+    }
+
+    public int scorePoints() {
+        return type.numSides() * 10;
     }
 }

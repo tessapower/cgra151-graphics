@@ -23,7 +23,7 @@ public enum PolygonType {
         return c;
     }
 
-    public int getSideLength() {
+    public int sideLength() {
         return numSides * 3;
     }
 }
